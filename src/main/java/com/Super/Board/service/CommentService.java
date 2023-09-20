@@ -35,11 +35,24 @@ public class CommentService {
         return commentRepository.findByAuthor(author);
     }
 
+    public Comment addComment(CommentDTO commentDTO){
+        Comment comment = this.DTOToEntity(commentDTO);
+        return commentRepository.save(comment);
+    }
+
     public CommentDTO entityToDTO(Comment comment){
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setId(comment.getId());
         commentDTO.setAuthor(comment.getAuthor());
         commentDTO.setContent(comment.getContent());
         return commentDTO;
+    }
+
+    public Comment DTOToEntity(CommentDTO commentDTO){
+        Comment comment = new Comment();
+        comment.setId(commentDTO.getId());
+        comment.setAuthor(commentDTO.getAuthor());
+        comment.setContent(commentDTO.getContent());
+        return comment;
     }
 }

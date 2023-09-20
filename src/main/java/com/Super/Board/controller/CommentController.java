@@ -6,9 +6,7 @@ import com.Super.Board.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,11 +18,17 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @GetMapping("/api/comments")
+    @GetMapping
     public List<CommentDTO> findAll(){
         List<Comment> comments = commentService.findAll();
         return comments.stream()
                 .map(commentService::entityToDTO)
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping
+    public CommentDTO addComment(@RequestBody CommentDTO commentDTO){
+        Comment addComment = commentService.addComment(commentDTO);
+        return commentService.entityToDTO(addComment);
     }
 }
