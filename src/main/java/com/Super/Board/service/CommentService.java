@@ -19,32 +19,26 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
-    public Comment save(Comment comment){
-        return commentRepository.save(comment);
-    }
-
-    public List<Comment> findAll(){
+//    public Optional<Comment> findById(Long id) {
+//        return commentRepository.findById(id);
+//    }
+//
+//    public List<Comment> findByAuthor(String author) {
+//        return commentRepository.findByAuthor(author);
+//    }
+    public List<Comment> findAll() {
         List<Comment> allComments = commentRepository.findAll();
         return allComments;
     }
 
-    public Optional<Comment> findById(Long id){
-        return commentRepository.findById(id);
-    }
-
-    public List<Comment> findByAuthor(String author){
-        return commentRepository.findByAuthor(author);
-    }
-
-    public Comment addComment(CommentDTO commentDTO){
-        Comment comment = this.DTOToEntity(commentDTO);
+    public Comment addComment(Comment comment) {
         return commentRepository.save(comment);
     }
 
     public Comment putComment(Long id, CommentDTO commentDTO) {
         Optional<Comment> optionalComment = commentRepository.findById(id);
 
-        if(optionalComment.isPresent()){
+        if (optionalComment.isPresent()) {
             Comment originComment = optionalComment.get();
 
             originComment.setAuthor(commentDTO.getAuthor());
@@ -56,7 +50,20 @@ public class CommentService {
         }
     }
 
-    public CommentDTO entityToDTO(Comment comment){
+    public boolean deleteComment(Long id) {
+        Optional<Comment> optionalComment = commentRepository.findById(id);
+
+        if(optionalComment.isPresent()) {
+            commentRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+
+    public CommentDTO entityToDTO(Comment comment) {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setId(comment.getId());
         commentDTO.setAuthor(comment.getAuthor());
@@ -64,7 +71,7 @@ public class CommentService {
         return commentDTO;
     }
 
-    public Comment DTOToEntity(CommentDTO commentDTO){
+    public Comment DTOToEntity(CommentDTO commentDTO) {
         Comment comment = new Comment();
         comment.setId(commentDTO.getId());
         comment.setAuthor(commentDTO.getAuthor());
