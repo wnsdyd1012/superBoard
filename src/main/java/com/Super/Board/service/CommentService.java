@@ -4,6 +4,7 @@ import com.Super.Board.dto.CommentDTO;
 import com.Super.Board.entity.Comment;
 import com.Super.Board.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,21 @@ public class CommentService {
     public Comment addComment(CommentDTO commentDTO){
         Comment comment = this.DTOToEntity(commentDTO);
         return commentRepository.save(comment);
+    }
+
+    public Comment putComment(Long id, CommentDTO commentDTO) {
+        Optional<Comment> optionalComment = commentRepository.findById(id);
+
+        if(optionalComment.isPresent()){
+            Comment originComment = optionalComment.get();
+
+            originComment.setAuthor(commentDTO.getAuthor());
+            originComment.setContent(commentDTO.getContent());
+
+            return commentRepository.save(originComment);
+        } else {
+            throw new RuntimeException("Not Found");
+        }
     }
 
     public CommentDTO entityToDTO(Comment comment){
